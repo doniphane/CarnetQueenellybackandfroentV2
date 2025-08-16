@@ -1,0 +1,219 @@
+"use client"
+
+import { Button } from "@/components/ui/button"
+import { Separator } from "@/components/ui/separator"
+import { 
+  Mail, 
+  Phone, 
+  MapPin, 
+  ExternalLink, 
+  Shield, 
+  FileText, 
+  UserCheck,
+  Building
+} from "lucide-react"
+
+// Interface pour les props du composant
+interface FooterProps {
+  className?: string
+}
+
+export function Footer({ className = "" }: FooterProps) {
+  // Fonction pour ouvrir les liens dans un nouvel onglet
+  const openInNewTab = (url: string) => {
+    window.open(url, '_blank', 'noopener,noreferrer')
+  }
+
+  // Fonction pour gérer les clics sur les liens internes
+  const handleInternalLink = (path: string) => {
+    // Ici vous pourriez utiliser Next.js router pour la navigation
+    // Pour l'instant, on utilise window.location
+    window.location.href = path
+  }
+
+  return (
+    <footer className={`bg-background border-t ${className}`}>
+      <div className="max-w-7xl mx-auto px-4 py-12">
+        {/* Section principale du footer */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+          
+          {/* Informations de l'entreprise */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-2">
+              <Building className="h-6 w-6 text-primary" />
+              <h3 className="text-lg font-semibold">Mon Carnet de Notes</h3>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              Votre espace personnel pour organiser vos notes et votre emploi du temps.
+              Une solution simple et efficace pour votre productivité quotidienne.
+            </p>
+            
+            {/* Informations de contact */}
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Mail className="h-4 w-4" />
+                <span>contact@moncarnet.fr</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Phone className="h-4 w-4" />
+                <span>+33 1 23 45 67 89</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <MapPin className="h-4 w-4" />
+                <span>123 Rue de la Paix, 75001 Paris</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Liens légaux */}
+          <div className="space-y-4">
+            <h4 className="font-semibold text-foreground">Informations légales</h4>
+            <div className="space-y-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="justify-start p-0 h-auto text-muted-foreground hover:text-foreground"
+                onClick={() => handleInternalLink('/mentions-legales')}
+              >
+                <FileText className="h-4 w-4 mr-2" />
+                Mentions légales
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="justify-start p-0 h-auto text-muted-foreground hover:text-foreground"
+                onClick={() => handleInternalLink('/politique-cookies')}
+              >
+                <Shield className="h-4 w-4 mr-2" />
+                Politique de cookies
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="justify-start p-0 h-auto text-muted-foreground hover:text-foreground"
+                onClick={() => handleInternalLink('/politique-confidentialite')}
+              >
+                <UserCheck className="h-4 w-4 mr-2" />
+                Politique de confidentialité
+              </Button>
+            </div>
+          </div>
+
+          {/* Liens utiles */}
+          <div className="space-y-4">
+            <h4 className="font-semibold text-foreground">Liens utiles</h4>
+            <div className="space-y-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="justify-start p-0 h-auto text-muted-foreground hover:text-foreground"
+                onClick={() => handleInternalLink('/aide')}
+              >
+                Centre d'aide
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="justify-start p-0 h-auto text-muted-foreground hover:text-foreground"
+                onClick={() => handleInternalLink('/contact')}
+              >
+                Nous contacter
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="justify-start p-0 h-auto text-muted-foreground hover:text-foreground"
+                onClick={() => handleInternalLink('/conditions-utilisation')}
+              >
+                Conditions d'utilisation
+              </Button>
+            </div>
+          </div>
+
+          {/* Conformité RGPD */}
+          <div className="space-y-4">
+            <h4 className="font-semibold text-foreground">Conformité RGPD</h4>
+            <div className="space-y-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="justify-start p-0 h-auto text-muted-foreground hover:text-foreground"
+                onClick={() => handleInternalLink('/droits-rgpd')}
+              >
+                Vos droits RGPD
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="justify-start p-0 h-auto text-muted-foreground hover:text-foreground"
+                onClick={() => handleInternalLink('/export-donnees')}
+              >
+                Exporter mes données
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="justify-start p-0 h-auto text-muted-foreground hover:text-foreground"
+                onClick={() => handleInternalLink('/supprimer-compte')}
+              >
+                Supprimer mon compte
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        <Separator className="my-8" />
+
+        {/* Section inférieure */}
+        <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+          {/* Copyright */}
+          <div className="text-sm text-muted-foreground">
+            © {new Date().getFullYear()} Mon Carnet de Notes. Tous droits réservés.
+          </div>
+
+          {/* Liens sociaux et légaux */}
+          <div className="flex items-center gap-4 text-sm text-muted-foreground">
+            <span>Version 1.0.0</span>
+            <span>•</span>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="p-0 h-auto text-muted-foreground hover:text-foreground"
+              onClick={() => handleInternalLink('/accessibilite')}
+            >
+              Accessibilité
+            </Button>
+            <span>•</span>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="p-0 h-auto text-muted-foreground hover:text-foreground"
+              onClick={() => handleInternalLink('/plan-du-site')}
+            >
+              Plan du site
+            </Button>
+          </div>
+        </div>
+
+        {/* Avertissement RGPD */}
+        <div className="mt-8 p-4 bg-muted/50 rounded-lg">
+          <div className="flex items-start gap-3">
+            <Shield className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+            <div className="text-sm text-muted-foreground">
+              <p className="font-medium text-foreground mb-1">
+                Protection de vos données personnelles
+              </p>
+              <p>
+                Nous nous engageons à protéger vos données personnelles conformément au 
+                Règlement Général sur la Protection des Données (RGPD). Vos données sont 
+                traitées de manière sécurisée et ne sont utilisées que dans le cadre de 
+                nos services. Vous pouvez exercer vos droits d'accès, de rectification, 
+                de suppression et d'opposition en nous contactant.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  )
+} 

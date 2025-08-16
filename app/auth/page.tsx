@@ -6,6 +6,7 @@ import { RegisterForm } from "@/components/auth/RegisterForm"
 import { useAuth } from "@/hooks/useAuth"
 import { useRouter } from "next/navigation"
 import { useEffect } from "react"
+import { CookieBanner } from "@/components/cookie-banner"
 import type { LoginRequest, RegisterRequest } from "@/types/auth"
 
 export default function AuthPage() {
@@ -46,6 +47,22 @@ export default function AuthPage() {
     clearError()
   }
 
+  // Fonctions de gestion des cookies
+  const handleAcceptAllCookies = () => {
+    console.log("Tous les cookies acceptés")
+    // Ici vous pourriez initialiser des services d'analytics
+  }
+
+  const handleAcceptNecessaryCookies = () => {
+    console.log("Seulement les cookies nécessaires acceptés")
+    // Ici vous pourriez désactiver les services d'analytics
+  }
+
+  const handleCustomizeCookies = () => {
+    console.log("Personnalisation des cookies demandée")
+    // Ici vous pourriez ouvrir un modal de personnalisation
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 p-4">
       <div className="w-full max-w-md">
@@ -65,6 +82,13 @@ export default function AuthPage() {
           />
         )}
       </div>
+      
+      {/* Bannière de cookies */}
+      <CookieBanner
+        onAcceptAll={handleAcceptAllCookies}
+        onAcceptNecessary={handleAcceptNecessaryCookies}
+        onCustomize={handleCustomizeCookies}
+      />
     </div>
   )
 } 

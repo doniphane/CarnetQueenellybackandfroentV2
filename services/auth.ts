@@ -1,7 +1,5 @@
 import type { LoginRequest, RegisterRequest, AuthResponse, User } from '@/types/auth';
-
-// URL originale qui fonctionnait
-const API_BASE_URL = 'https://localhost:8000/api';
+import { buildApiUrl, DEFAULT_FETCH_OPTIONS } from '@/lib/config';
 
 export class AuthService {
   private static async request<T>(
@@ -9,15 +7,14 @@ export class AuthService {
     options: RequestInit = {}
   ): Promise<T> {
     try {
-      const url = `${API_BASE_URL}${endpoint}`;
+      const url = buildApiUrl(endpoint);
       const response = await fetch(url, {
+        ...DEFAULT_FETCH_OPTIONS,
+        ...options,
         headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
+          ...DEFAULT_FETCH_OPTIONS.headers,
           ...options.headers,
         },
-        credentials: 'include', // Inclut les cookies si nécessaire
-        ...options,
       });
 
       if (!response.ok) {

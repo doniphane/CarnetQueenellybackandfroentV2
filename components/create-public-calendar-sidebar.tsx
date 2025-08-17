@@ -35,18 +35,12 @@ export function CreatePublicCalendarSidebar() {
 
   // Fonction pour créer un calendrier public
   const handleCreateCalendar = async () => {
-    console.log("Tentative de création de calendrier...")
-    console.log("Nom du calendrier:", calendarName)
-    console.log("Utilisateur:", user)
-    
     if (!calendarName.trim()) {
-      console.log("Erreur: Nom du calendrier vide")
       alert("Veuillez entrer un nom pour le calendrier")
       return
     }
     
     if (!user) {
-      console.log("Erreur: Utilisateur non connecté")
       alert("Vous devez être connecté pour créer un calendrier")
       return
     }
@@ -56,12 +50,11 @@ export function CreatePublicCalendarSidebar() {
         calendarName,
         calendarDescription,
         calendarColor,
-        String(user.id) || "user-id",
+        String(user.id),
         user.email?.split('@')[0] || "Utilisateur",
         user.email || "user@example.com"
       )
       
-      console.log("Calendrier créé avec succès:", newCalendar)
       alert("Calendrier public créé avec succès !")
 
       // Réinitialiser le formulaire
@@ -70,7 +63,6 @@ export function CreatePublicCalendarSidebar() {
       setCalendarColor(CALENDAR_COLORS[0])
       setIsDialogOpen(false)
     } catch (error) {
-      console.error("Erreur lors de la création du calendrier:", error)
       alert("Erreur lors de la création du calendrier")
     }
   }

@@ -1,8 +1,6 @@
 import type { Note } from '@/types/note';
 import type { Event } from '@/types/event';
-
-// Configuration de l'API
-const API_BASE_URL = 'https://localhost:8000/api';
+import { API_BASE_URL, buildApiUrl } from '@/lib/config';
 
 // Fonction pour récupérer le token depuis les cookies
 const getAuthToken = (): string | null => {
@@ -27,7 +25,7 @@ export class ApiService {
     options: RequestInit = {}
   ): Promise<ApiResponse<T>> {
     try {
-      const url = `${API_BASE_URL}${endpoint}`;
+      const url = buildApiUrl(endpoint);
       const token = getAuthToken();
       
       const headers: Record<string, string> = {

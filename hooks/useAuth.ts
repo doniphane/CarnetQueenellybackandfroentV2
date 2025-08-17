@@ -37,10 +37,8 @@ export const useAuth = () => {
     const initializeAuth = async () => {
       try {
         const token = getCookie('auth_token');
-        console.log('Token trouvé:', token ? 'Oui' : 'Non');
         if (token) {
           const user = await AuthService.getCurrentUser(token);
-          console.log('Utilisateur récupéré:', user);
           setAuthState({
             user,
             token,
@@ -72,7 +70,6 @@ export const useAuth = () => {
     
     try {
       const response = await AuthService.login(credentials);
-      console.log('Réponse de connexion:', response);
       
       // Stocker le token dans un cookie sécurisé
       setSecureCookie('auth_token', response.token);
@@ -132,7 +129,6 @@ export const useAuth = () => {
         await AuthService.logout(authState.token);
       }
     } catch (error) {
-      console.error('Erreur lors de la déconnexion:', error);
       // Même en cas d'erreur, on continue avec la déconnexion locale
     } finally {
       // Supprimer le cookie

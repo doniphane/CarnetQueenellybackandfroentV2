@@ -23,7 +23,6 @@ export function usePublicCalendars() {
       setPublicCalendars(calendars)
       
     } catch (err) {
-      console.error("Erreur lors du chargement des calendriers publics:", err)
       setError("Impossible de charger les calendriers publics")
     } finally {
       setIsLoading(false)

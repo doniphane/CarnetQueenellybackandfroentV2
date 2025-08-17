@@ -1,8 +1,6 @@
 // Service API pour les calendriers publics avec le backend Symfony
 import { PublicCalendar, PublicCalendarEvent } from "@/types/public-calendar"
-
-// URL originale qui fonctionnait
-const API_BASE_URL = 'https://localhost:8000/api'
+import { buildApiUrl, DEFAULT_FETCH_OPTIONS } from "@/lib/config"
 
 // Fonction pour récupérer le token depuis les cookies (même logique que useAuth)
 const getAuthToken = (): string | null => {
@@ -18,7 +16,7 @@ export class PublicCalendarApiService {
   // Récupérer tous les calendriers publics
   static async getAllPublicCalendars(): Promise<PublicCalendar[]> {
     try {
-      const response = await fetch(`${API_BASE_URL}/public_calendars`, {
+      const response = await fetch(buildApiUrl('public_calendars'), {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -69,13 +67,16 @@ export class PublicCalendarApiService {
         headers['Authorization'] = `Bearer ${token}`;
       }
 
-      const response = await fetch(`${API_BASE_URL}/public_calendars`, {
+      const response = await fetch(buildApiUrl('public_calendars'), {
         method: 'POST',
         headers,
         body: JSON.stringify({
           name,
           description,
           color,
+          ownerId: parseInt(ownerId),
+          ownerName,
+          ownerEmail,
         }),
       })
 
@@ -98,7 +99,6 @@ export class PublicCalendarApiService {
         updatedAt: new Date(calendar.updatedAt),
       }
     } catch (error) {
-      console.error('Erreur lors de la création du calendrier public:', error)
       throw error
     }
   }
@@ -116,7 +116,7 @@ export class PublicCalendarApiService {
         headers['Authorization'] = `Bearer ${token}`;
       }
 
-      const response = await fetch(`${API_BASE_URL}/public_calendars/${calendarId}`, {
+      const response = await fetch(buildApiUrl(`public_calendars/${calendarId}`), {
         method: 'DELETE',
         headers,
       })
@@ -131,7 +131,7 @@ export class PublicCalendarApiService {
   // Récupérer tous les événements d'un calendrier
   static async getCalendarEvents(calendarId: string): Promise<PublicCalendarEvent[]> {
     try {
-      const response = await fetch(`${API_BASE_URL}/public_calendar_events?calendarId=${calendarId}`, {
+      const response = await fetch(buildApiUrl(`public_calendar_events?calendarId=${calendarId}`), {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -176,7 +176,7 @@ export class PublicCalendarApiService {
         headers['Authorization'] = `Bearer ${token}`;
       }
 
-      const response = await fetch(`${API_BASE_URL}/public_calendar_events`, {
+      const response = await fetch(buildApiUrl('public_calendar_events'), {
         method: 'POST',
         headers,
         body: JSON.stringify({
@@ -229,7 +229,7 @@ export class PublicCalendarApiService {
         headers['Authorization'] = `Bearer ${token}`;
       }
 
-      const response = await fetch(`${API_BASE_URL}/public_calendar_events/${eventId}`, {
+      const response = await fetch(buildApiUrl(`public_calendar_events/${eventId}`), {
         method: 'PATCH',
         headers,
         body: JSON.stringify(eventData),
@@ -273,7 +273,7 @@ export class PublicCalendarApiService {
         headers['Authorization'] = `Bearer ${token}`;
       }
 
-      const response = await fetch(`${API_BASE_URL}/public_calendar_events/${eventId}`, {
+      const response = await fetch(buildApiUrl(`public_calendar_events/${eventId}`), {
         method: 'DELETE',
         headers,
       })

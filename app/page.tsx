@@ -148,7 +148,6 @@ export default function HomePage() {
       setShowNoteForm(false)
       setEditingNote(undefined)
     } catch (error) {
-      console.error('Erreur lors de la sauvegarde de la note:', error)
       // Ici vous pourriez afficher une notification d'erreur
     }
   }
@@ -164,7 +163,6 @@ export default function HomePage() {
       setEditingEvent(undefined)
       setSelectedDate(undefined)
     } catch (error) {
-      console.error('Erreur lors de la sauvegarde de l\'événement:', error)
       // Ici vous pourriez afficher une notification d'erreur
     }
   }
@@ -183,7 +181,6 @@ export default function HomePage() {
     try {
       await deleteNote(noteId)
     } catch (error) {
-      console.error('Erreur lors de la suppression de la note:', error)
       // Ici vous pourriez afficher une notification d'erreur
     }
   }
@@ -192,7 +189,6 @@ export default function HomePage() {
     try {
       await deleteEvent(eventId)
     } catch (error) {
-      console.error('Erreur lors de la suppression de l\'événement:', error)
       // Ici vous pourriez afficher une notification d'erreur
     }
   }

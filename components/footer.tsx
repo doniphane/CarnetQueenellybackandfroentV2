@@ -44,23 +44,15 @@ export function Footer({ className = "" }: FooterProps) {
               <h3 className="text-lg font-semibold">Mon Carnet de Notes</h3>
             </div>
             <p className="text-sm text-muted-foreground">
-              Votre espace personnel pour organiser vos notes et votre emploi du temps.
-              Une solution simple et efficace pour votre productivité quotidienne.
+              Mon espace personnel pour organiser mes notes et mon emploi du temps.
+         
             </p>
             
             {/* Informations de contact */}
             <div className="space-y-2">
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <Mail className="h-4 w-4" />
-                <span>contact@moncarnet.fr</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Phone className="h-4 w-4" />
-                <span>+33 1 23 45 67 89</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <MapPin className="h-4 w-4" />
-                <span>123 Rue de la Paix, 75001 Paris</span>
+                <span>antredequeennelly@protonmail.com</span>
               </div>
             </div>
           </div>
@@ -95,68 +87,6 @@ export function Footer({ className = "" }: FooterProps) {
               >
                 <UserCheck className="h-4 w-4 mr-2" />
                 Politique de confidentialité
-              </Button>
-            </div>
-          </div>
-
-          {/* Liens utiles */}
-          <div className="space-y-4">
-            <h4 className="font-semibold text-foreground">Liens utiles</h4>
-            <div className="space-y-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="justify-start p-0 h-auto text-muted-foreground hover:text-foreground"
-                onClick={() => handleInternalLink('/aide')}
-              >
-                Centre d'aide
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="justify-start p-0 h-auto text-muted-foreground hover:text-foreground"
-                onClick={() => handleInternalLink('/contact')}
-              >
-                Nous contacter
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="justify-start p-0 h-auto text-muted-foreground hover:text-foreground"
-                onClick={() => handleInternalLink('/conditions-utilisation')}
-              >
-                Conditions d'utilisation
-              </Button>
-            </div>
-          </div>
-
-          {/* Conformité RGPD */}
-          <div className="space-y-4">
-            <h4 className="font-semibold text-foreground">Conformité RGPD</h4>
-            <div className="space-y-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="justify-start p-0 h-auto text-muted-foreground hover:text-foreground"
-                onClick={() => handleInternalLink('/droits-rgpd')}
-              >
-                Vos droits RGPD
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="justify-start p-0 h-auto text-muted-foreground hover:text-foreground"
-                onClick={() => handleInternalLink('/export-donnees')}
-              >
-                Exporter mes données
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="justify-start p-0 h-auto text-muted-foreground hover:text-foreground"
-                onClick={() => handleInternalLink('/supprimer-compte')}
-              >
-                Supprimer mon compte
               </Button>
             </div>
           </div>
@@ -195,24 +125,7 @@ export function Footer({ className = "" }: FooterProps) {
           </div>
         </div>
 
-        {/* Avertissement RGPD */}
-        <div className="mt-8 p-4 bg-muted/50 rounded-lg">
-          <div className="flex items-start gap-3">
-            <Shield className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
-            <div className="text-sm text-muted-foreground">
-              <p className="font-medium text-foreground mb-1">
-                Protection de vos données personnelles
-              </p>
-              <p>
-                Nous nous engageons à protéger vos données personnelles conformément au 
-                Règlement Général sur la Protection des Données (RGPD). Vos données sont 
-                traitées de manière sécurisée et ne sont utilisées que dans le cadre de 
-                nos services. Vous pouvez exercer vos droits d'accès, de rectification, 
-                de suppression et d'opposition en nous contactant.
-              </p>
-            </div>
-          </div>
-        </div>
+      
       </div>
     </footer>
   )

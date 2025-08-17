@@ -54,49 +54,11 @@ export default function MentionsLegalesPage() {
                 <h3 className="font-semibold text-foreground mb-2">
                   Mon Carnet de Notes
                 </h3>
-                <div className="space-y-2 text-sm text-muted-foreground">
-                  <div className="flex items-center gap-2">
-                    <MapPin className="h-4 w-4" />
-                    <span>123 Rue de la Paix, 75001 Paris, France</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Mail className="h-4 w-4" />
-                    <span>contact@moncarnet.fr</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Phone className="h-4 w-4" />
-                    <span>+33 1 23 45 67 89</span>
-                  </div>
-                </div>
-              </div>
+               </div>
               
-              <div>
-                <h4 className="font-medium text-foreground mb-2">Forme juridique</h4>
-                <p className="text-sm text-muted-foreground">
-                  Société par actions simplifiée (SAS)
-                </p>
-              </div>
-              
-              <div>
-                <h4 className="font-medium text-foreground mb-2">Capital social</h4>
-                <p className="text-sm text-muted-foreground">
-                  10 000 €
-                </p>
-              </div>
-              
-              <div>
-                <h4 className="font-medium text-foreground mb-2">SIRET</h4>
-                <p className="text-sm text-muted-foreground">
-                  123 456 789 00012
-                </p>
-              </div>
-              
-              <div>
-                <h4 className="font-medium text-foreground mb-2">Directeur de publication</h4>
-                <p className="text-sm text-muted-foreground">
-                  Jean Dupont, Président
-                </p>
-              </div>
+         <p className="text-sm text-muted-foreground">
+          Mon Carnet de Notes est un site web créé par QueenNelly.
+         </p>
             </CardContent>
           </Card>
 
@@ -155,7 +117,7 @@ export default function MentionsLegalesPage() {
               
               <p className="text-sm text-muted-foreground">
                 Si vous constatez une lacune, erreur ou ce qui parait être un dysfonctionnement, 
-                merci de bien vouloir le signaler par email à l'adresse contact@moncarnet.fr, 
+                merci de bien vouloir le signaler par email à l'adresse antredequeennelly@protonmail.com, 
                 en décrivant le problème de la manière la plus précise possible.
               </p>
               

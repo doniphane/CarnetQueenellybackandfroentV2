@@ -1,46 +1,38 @@
 #!/bin/bash
 
-echo "🚀 Démarrage du backend Symfony..."
+echo "🚀 Démarrage du serveur Symfony..."
 
 # Aller dans le dossier backend
 cd backend
 
-# Vérifier si PHP est installé
-if ! command -v php &> /dev/null; then
-    echo "❌ PHP n'est pas installé. Veuillez installer PHP 8.1+"
-    exit 1
-fi
-
-# Vérifier si Composer est installé
-if ! command -v composer &> /dev/null; then
-    echo "❌ Composer n'est pas installé. Veuillez installer Composer"
-    exit 1
+# Vérifier si les clés JWT existent
+if [ ! -f "config/jwt/private.pem" ] || [ ! -f "config/jwt/public.pem" ]; then
+    echo "🔑 Génération des clés JWT..."
+    mkdir -p config/jwt
+    openssl genpkey -out config/jwt/private.pem -aes256 -algorithm rsa -pkeyopt rsa_keygen_bits:4096 -pass pass:your_passphrase
+    openssl pkey -in config/jwt/private.pem -out config/jwt/public.pem -pubout -passin pass:your_passphrase
+    echo "✅ Clés JWT générées"
 fi
 
 # Installer les dépendances si nécessaire
 if [ ! -d "vendor" ]; then
-    echo "📦 Installation des dépendances..."
+    echo "📦 Installation des dépendances Composer..."
     composer install
 fi
 
-# Vérifier si la base de données existe
-echo "🗄️ Vérification de la base de données..."
-php bin/console doctrine:database:create --if-not-exists
+# Vider le cache
+echo "🧹 Nettoyage du cache..."
+php bin/console cache:clear
 
-# Exécuter les migrations
-echo "🔄 Exécution des migrations..."
+# Mettre à jour la base de données
+echo "🗄️ Mise à jour de la base de données..."
 php bin/console doctrine:migrations:migrate --no-interaction
 
-# Charger les données de test
-echo "📝 Chargement des données de test..."
-php bin/console doctrine:fixtures:load --no-interaction
-
 # Démarrer le serveur
-echo "🌐 Démarrage du serveur sur http://localhost:8000"
-echo "📚 API Platform UI: http://localhost:8000/api"
-echo "🔗 API Endpoints: http://localhost:8000/api/notes, http://localhost:8000/api/events"
-echo ""
-echo "Appuyez sur Ctrl+C pour arrêter le serveur"
-echo ""
+echo "🌐 Démarrage du serveur Symfony sur http://localhost:8000..."
+symfony server:start --port=8000 --daemon
 
-php -S localhost:8000 -t public/ 
+echo "✅ Serveur Symfony démarré !"
+echo "📱 Frontend: http://localhost:3000"
+echo "🔧 Backend: http://localhost:8000"
+echo "📚 API: http://localhost:8000/api" 

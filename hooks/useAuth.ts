@@ -129,10 +129,11 @@ export const useAuth = () => {
   const logout = useCallback(async () => {
     try {
       if (authState.token) {
-        await AuthService.logout();
+        await AuthService.logout(authState.token);
       }
     } catch (error) {
       console.error('Erreur lors de la déconnexion:', error);
+      // Même en cas d'erreur, on continue avec la déconnexion locale
     } finally {
       // Supprimer le cookie
       removeCookie('auth_token');

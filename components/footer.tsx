@@ -32,7 +32,7 @@ export function Footer({ className = "" }: FooterProps) {
   }
 
   return (
-    <footer className={`bg-background border-t ${className}`}>
+    <footer className={`bg-background border-t relative z-10 ${className}`}>
       <div className="max-w-7xl mx-auto px-4 py-12">
         {/* Section principale du footer */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">

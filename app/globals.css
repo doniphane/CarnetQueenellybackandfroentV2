@@ -36,7 +36,9 @@
   --sidebar-accent: oklch(0.696 0.17 330.48); /* #ec4899 */
   --sidebar-accent-foreground: oklch(1 0 0); /* #ffffff */
   --sidebar-border: oklch(0.922 0 0); /* #e5e7eb */
-  --sidebar-ring: oklch(0.646 0.222 280.116 / 0.5); /* rgba(139, 92, 246, 0.5) */
+  --sidebar-ring: oklch(
+    0.646 0.222 280.116 / 0.5
+  ); /* rgba(139, 92, 246, 0.5) */
   --font-dm-sans: "DM Sans", sans-serif;
 }
 
@@ -77,7 +79,8 @@
 
 @theme inline {
   --font-sans: var(--font-dm-sans);
-  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -123,5 +126,51 @@
   }
   body {
     @apply bg-background text-foreground font-sans;
+  }
+}
+
+/* Améliorations de responsivité pour les cartes */
+@layer components {
+  /* Assure que les titres longs ne débordent pas */
+  .card-title-responsive {
+    @apply truncate break-words;
+    word-break: break-word;
+    overflow-wrap: break-word;
+  }
+
+  /* Optimise l'affichage des boutons sur mobile */
+  .mobile-button-optimized {
+    @apply h-8 w-8 p-0 sm:h-9 sm:w-9;
+  }
+
+  /* Améliore la gestion de l'espace dans les cartes */
+  .card-content-responsive {
+    @apply flex-1 min-w-0;
+  }
+
+  /* Optimise les icônes pour différentes tailles d'écran */
+  .icon-responsive {
+    @apply h-3 w-3 sm:h-4 sm:w-4;
+  }
+
+  /* Améliore la sidebar sur mobile */
+  .sidebar-mobile-optimized {
+    @apply w-72 sm:w-80 md:w-64 lg:w-72;
+  }
+
+  /* Troncature améliorée pour les titres */
+  .title-truncate {
+    @apply truncate overflow-hidden text-ellipsis whitespace-nowrap;
+    max-width: 100%;
+  }
+
+  /* Conteneur de carte avec débordement contrôlé */
+  .card-container {
+    @apply overflow-hidden;
+  }
+
+  /* Gestion de l'espace pour les titres */
+  .title-container {
+    @apply flex-1 min-w-0 overflow-hidden;
   }
 }

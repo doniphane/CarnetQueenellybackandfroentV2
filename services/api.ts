@@ -32,6 +32,7 @@ export class ApiService {
       
       const headers: Record<string, string> = {
         'Content-Type': 'application/json',
+        'Accept': 'application/json',
         ...(options.headers as Record<string, string>),
       };
 
@@ -46,7 +47,8 @@ export class ApiService {
       });
 
       if (!response.ok) {
-        throw new Error(`Erreur HTTP: ${response.status}`);
+        const errorText = await response.text();
+        throw new Error(`Erreur HTTP: ${response.status} - ${errorText}`);
       }
 
       // Pour les requêtes DELETE, il n'y a généralement pas de contenu JSON
@@ -55,8 +57,13 @@ export class ApiService {
       }
 
       const data = await response.json();
-      // API Platform retourne directement les données, pas dans un objet data
-      return { data };
+      
+      // API Platform peut retourner les données dans différents formats
+      // Si c'est un objet avec hydra:member, on prend hydra:member
+      // Sinon on prend directement les données
+      const finalData = data['hydra:member'] !== undefined ? data['hydra:member'] : data;
+      
+      return { data: finalData };
     } catch (error) {
       console.error('Erreur API:', error);
       return {
@@ -78,9 +85,6 @@ export class ApiService {
   static async createNote(noteData: Omit<Note, 'id' | 'createdAt' | 'updatedAt'>): Promise<ApiResponse<Note>> {
     return this.request<Note>('/notes', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/ld+json',
-      },
       body: JSON.stringify(noteData),
     });
   }
@@ -88,9 +92,6 @@ export class ApiService {
   static async updateNote(id: string, noteData: Partial<Note>): Promise<ApiResponse<Note>> {
     return this.request<Note>(`/notes/${id}`, {
       method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/merge-patch+json',
-      },
       body: JSON.stringify(noteData),
     });
   }
@@ -113,9 +114,6 @@ export class ApiService {
   static async createEvent(eventData: Omit<Event, 'id' | 'createdAt' | 'updatedAt'>): Promise<ApiResponse<Event>> {
     return this.request<Event>('/events', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/ld+json',
-      },
       body: JSON.stringify(eventData),
     });
   }
@@ -123,9 +121,6 @@ export class ApiService {
   static async updateEvent(id: string, eventData: Partial<Event>): Promise<ApiResponse<Event>> {
     return this.request<Event>(`/events/${id}`, {
       method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/merge-patch+json',
-      },
       body: JSON.stringify(eventData),
     });
   }

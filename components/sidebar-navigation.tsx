@@ -1,10 +1,13 @@
 "use client"
 import { Button } from "@/components/ui/button"
-import { Calendar, StickyNote, LayoutDashboard, Plus, Search, Filter, Menu, X, LogIn, LogOut, User, Settings, Shield } from "lucide-react"
+import { Calendar, StickyNote, LayoutDashboard, Plus, Search, Filter, Menu, X, LogIn, LogOut, User, Settings, Shield, Users } from "lucide-react"
+import { PublicCalendarsNav } from "@/components/public-calendars-nav"
+import { CreatePublicCalendarSidebar } from "@/components/create-public-calendar-sidebar"
 import { useState } from "react"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { useAuth } from "@/hooks/useAuth"
 import { useRouter } from "next/navigation"
+
 
 interface SidebarNavigationProps {
   activeSection: string
@@ -27,6 +30,7 @@ export function SidebarNavigation({
   const { user, isAuthenticated, logout } = useAuth()
   const router = useRouter()
 
+
   const navigationItems = [
     {
       id: "dashboard",
@@ -44,7 +48,13 @@ export function SidebarNavigation({
       id: "calendar",
       label: "Calendrier",
       icon: Calendar,
-      description: "Emploi du temps",
+      description: "Emploi du temps de Nelly",
+    },
+    {
+      id: "public-calendars",
+      label: "Calendriers Publics",
+      icon: Users,
+      description: "Calendriers partagés",
     },
   ]
 
@@ -82,163 +92,145 @@ export function SidebarNavigation({
 
       <div
         className={`
-        fixed md:relative inset-y-0 left-0 z-40 w-64 h-screen bg-sidebar border-r border-sidebar-border flex flex-col
+        fixed md:relative inset-y-0 left-0 z-50 w-72 sm:w-80 md:w-64 lg:w-72 h-screen bg-sidebar border-r border-sidebar-border flex flex-col
         transform transition-transform duration-300 ease-in-out
         ${isMobileMenuOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
         animate-in slide-in-from-left-0 duration-300
       `}
       >
         {/* Header */}
-        <div className="p-6 border-b border-sidebar-border animate-in fade-in-0 slide-in-from-top-2 duration-500">
-          <h1 className="text-xl font-bold text-sidebar-foreground">Mon Carnet de Notes</h1>
-          <p className="text-sm text-muted-foreground mt-1">Mon petit coin de vie</p>
+        <div className="p-4 sm:p-6 border-b border-sidebar-border animate-in fade-in-0 slide-in-from-top-2 duration-500">
+          <h1 className="text-lg sm:text-xl font-bold text-sidebar-foreground leading-tight">Mon Carnet de Notes</h1>
+          <p className="text-xs sm:text-sm text-muted-foreground mt-1">Mon petit coin de vie</p>
         </div>
 
         {/* Quick Actions */}
-        <div className="p-4 border-b border-sidebar-border animate-in fade-in-0 slide-in-from-top-4 duration-700">
+        <div className="p-3 sm:p-4 border-b border-sidebar-border animate-in fade-in-0 slide-in-from-top-4 duration-700">
           <div className="space-y-2">
             <Button
-              className="w-full justify-start gap-2 bg-sidebar-primary hover:bg-sidebar-primary/90 text-sidebar-primary-foreground transition-all duration-200 hover:scale-105 hover:shadow-md"
+              className="w-full justify-start gap-2 bg-sidebar-primary hover:bg-sidebar-primary/90 text-sidebar-primary-foreground transition-all duration-200 hover:scale-105 hover:shadow-md text-sm"
               size="sm"
               onClick={onAddNote}
             >
               <Plus className="h-4 w-4 transition-transform duration-200 group-hover:rotate-90" />
-              Nouvelle note
+              <span className="truncate">Nouvelle note</span>
             </Button>
             <Button
               variant="outline"
-              className="w-full justify-start gap-2 bg-transparent transition-all duration-200 hover:scale-105 hover:shadow-sm"
+              className="w-full justify-start gap-2 bg-transparent transition-all duration-200 hover:scale-105 hover:shadow-sm text-sm"
               size="sm"
               onClick={onAddEvent}
             >
               <Calendar className="h-4 w-4" />
-              Ajouter événement
+              <span className="truncate">Ajouter événement</span>
             </Button>
+            <CreatePublicCalendarSidebar />
           </div>
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 p-4 animate-in fade-in-0 slide-in-from-top-6 duration-900">
-          <div className="space-y-2">
-            {navigationItems.map((item, index) => {
-              const Icon = item.icon
-              const isActive = activeSection === item.id
+        <nav className="flex-1 p-3 sm:p-4 pb-20 animate-in fade-in-0 slide-in-from-top-6 duration-900 overflow-y-auto">
+          <div className="space-y-4">
+            {/* Navigation principale */}
+            <div className="space-y-2">
+              <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                Navigation
+              </h3>
+              {navigationItems.map((item) => {
+                const Icon = item.icon
+                const isActive = activeSection === item.id
+                return (
+                  <Button
+                    key={item.id}
+                    variant={isActive ? "secondary" : "ghost"}
+                    className={`w-full justify-start gap-2 sm:gap-3 transition-all duration-200 hover:scale-105 text-sm ${
+                      isActive
+                        ? "bg-sidebar-accent text-sidebar-accent-foreground shadow-md"
+                        : "hover:bg-sidebar-muted"
+                    }`}
+                    onClick={() => handleSectionChange(item.id)}
+                  >
+                    <Icon className="h-4 w-4 flex-shrink-0" />
+                    <div className="flex-1 text-left min-w-0">
+                      <div className="font-medium truncate">{item.label}</div>
+                      <div className="text-xs text-muted-foreground truncate">{item.description}</div>
+                    </div>
+                  </Button>
+                )
+              })}
+            </div>
 
-              return (
-                <Button
-                  key={item.id}
-                  variant={isActive ? "secondary" : "ghost"}
-                  className={`w-full justify-start gap-3 h-12 transition-all duration-200 hover:scale-105 hover:shadow-sm animate-in fade-in-0 slide-in-from-left-4 ${
-                    isActive
-                      ? "bg-sidebar-accent text-sidebar-accent-foreground shadow-md"
-                      : "text-sidebar-foreground hover:bg-sidebar-accent/10"
-                  }`}
-                  style={{ animationDelay: `${(index + 1) * 100}ms` }}
-                  onClick={() => handleSectionChange(item.id)}
-                >
-                  <Icon className="h-5 w-5 transition-transform duration-200 hover:scale-110" />
-                  <div className="text-left">
-                    <div className="font-medium">{item.label}</div>
-                    <div className="text-xs opacity-70">{item.description}</div>
-                  </div>
-                </Button>
-              )
-            })}
+            {/* Actions rapides */}
+            <div className="space-y-2">
+              <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                Actions
+              </h3>
+              <Button
+                variant="ghost"
+                className="w-full justify-start gap-2 sm:gap-3 hover:bg-sidebar-muted transition-all duration-200 hover:scale-105 text-sm"
+                onClick={onSearch}
+              >
+                <Search className="h-4 w-4 flex-shrink-0" />
+                <div className="flex-1 text-left min-w-0">
+                  <div className="font-medium truncate">Rechercher</div>
+                  <div className="text-xs text-muted-foreground truncate">Trouver rapidement</div>
+                </div>
+              </Button>
+              <Button
+                variant="ghost"
+                className="w-full justify-start gap-2 sm:gap-3 hover:bg-sidebar-muted transition-all duration-200 hover:scale-105 text-sm"
+                onClick={onFilter}
+              >
+                <Filter className="h-4 w-4 flex-shrink-0" />
+                <div className="flex-1 text-left min-w-0">
+                  <div className="font-medium truncate">Filtrer</div>
+                  <div className="text-xs text-muted-foreground truncate">Affiner les résultats</div>
+                </div>
+              </Button>
+            </div>
           </div>
         </nav>
 
-        {/* Search & Filter */}
-        <div className="p-4 border-t border-sidebar-border animate-in fade-in-0 slide-in-from-bottom-2 duration-500">
-          <div className="space-y-2">
-            <Button
-              variant="outline"
-              className="w-full justify-start gap-2 bg-transparent transition-all duration-200 hover:scale-105 hover:shadow-sm"
-              size="sm"
-              onClick={onSearch}
-            >
-              <Search className="h-4 w-4" />
-              Rechercher
-            </Button>
-            <Button
-              variant="outline"
-              className="w-full justify-start gap-2 bg-transparent transition-all duration-200 hover:scale-105 hover:shadow-sm"
-              size="sm"
-              onClick={onFilter}
-            >
-              <Filter className="h-4 w-4" />
-              Filtrer
-            </Button>
-            
-            {/* Authentication Section */}
-            <div className="pt-2 border-t border-sidebar-border">
-              {isAuthenticated ? (
-                <div className="space-y-3">
-                  {/* User Profile Card */}
-                  <div className="bg-card/50 rounded-lg p-3 border border-sidebar-border hover:bg-card/70 transition-colors">
-                    <div className="flex items-center gap-3">
-                      <div className="relative">
-                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold text-sm shadow-sm">
-                          {user?.email?.charAt(0).toUpperCase() || 'U'}
-                        </div>
-                        <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-background animate-pulse"></div>
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-1">
-                          <p className="text-sm font-medium text-foreground truncate">
-                            {user?.email?.split('@')[0] || 'Utilisateur'}
-                          </p>
-                          <Shield className="h-3 w-3 text-green-500" />
-                        </div>
-                        <p className="text-xs text-muted-foreground truncate">
-                          {user?.email}
-                        </p>
-                        <p className="text-xs text-green-600 font-medium">
-                          Connecté
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  {/* User Actions */}
-                  <div className="space-y-1">
-                    <Button
-                      variant="outline"
-                      className="w-full justify-start gap-2 bg-transparent transition-all duration-200 hover:scale-105 hover:shadow-sm"
-                      size="sm"
-                      onClick={() => {
-                        // TODO: Implémenter la page des paramètres
-                        console.log('Paramètres du compte')
-                      }}
-                    >
-                      <Settings className="h-4 w-4" />
-                      Paramètres
-                    </Button>
-                    <Button
-                      variant="outline"
-                      className="w-full justify-start gap-2 bg-transparent transition-all duration-200 hover:scale-105 hover:shadow-sm text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950"
-                      size="sm"
-                      onClick={handleLogout}
-                    >
-                      <LogOut className="h-4 w-4" />
-                      Déconnexion
-                    </Button>
-                  </div>
-                </div>
-              ) : (
-                <Button
-                  variant="outline"
-                  className="w-full justify-start gap-2 bg-transparent transition-all duration-200 hover:scale-105 hover:shadow-sm"
-                  size="sm"
-                  onClick={handleLogin}
-                >
-                  <LogIn className="h-4 w-4" />
-                  Connexion
-                </Button>
-              )}
-            </div>
-            
+        {/* Footer */}
+        <div className="p-3 sm:p-4 border-t border-sidebar-border animate-in fade-in-0 slide-in-from-bottom-2 duration-500">
+          {/* Theme Toggle */}
+          <div className="mb-4 flex justify-center">
             <ThemeToggle />
           </div>
+          
+          {isAuthenticated ? (
+            <div className="space-y-3">
+              <div className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 rounded-lg bg-sidebar-muted/50">
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-sidebar-primary flex items-center justify-center flex-shrink-0">
+                  <span className="text-xs font-semibold text-sidebar-primary-foreground">
+                    {user?.email?.charAt(0).toUpperCase() || "U"}
+                  </span>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="text-sm font-medium text-sidebar-foreground truncate">
+                    {user?.email || "Utilisateur"}
+                  </div>
+                  <div className="text-xs text-muted-foreground">Connecté</div>
+                </div>
+              </div>
+              <Button
+                variant="ghost"
+                className="w-full justify-start gap-2 sm:gap-3 text-destructive hover:text-destructive hover:bg-destructive/10 transition-all duration-200 text-sm"
+                onClick={handleLogout}
+              >
+                <LogOut className="h-4 w-4 flex-shrink-0" />
+                <span className="truncate">Se déconnecter</span>
+              </Button>
+            </div>
+          ) : (
+            <Button
+              className="w-full justify-start gap-2 sm:gap-3 bg-sidebar-primary hover:bg-sidebar-primary/90 text-sidebar-primary-foreground transition-all duration-200 text-sm"
+              onClick={handleLogin}
+            >
+              <LogIn className="h-4 w-4 flex-shrink-0" />
+              <span className="truncate">Se connecter</span>
+            </Button>
+          )}
         </div>
       </div>
     </>

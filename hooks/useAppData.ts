@@ -41,14 +41,14 @@ export const useAppData = () => {
     setLoading(prev => ({ ...prev, notes: true }));
     setErrors(prev => ({ ...prev, notes: null }));
 
-          try {
-        const response = await ApiService.getNotes();
-        // console.log('Réponse API Notes complète:', JSON.stringify(response.data, null, 2));
-        if (response.error) {
-          setErrors(prev => ({ ...prev, notes: response.error || null }));
-        } else {
-        // API Platform retourne les données dans member pour les listes
-        const notesData = (response.data as any)['member'] || response.data;
+    try {
+      const response = await ApiService.getNotes();
+      
+      if (response.error) {
+        setErrors(prev => ({ ...prev, notes: response.error || null }));
+      } else {
+        // Les données sont déjà traitées dans le service API
+        const notesData = response.data;
         
         // Vérifier que notesData est un tableau
         if (!Array.isArray(notesData)) {
@@ -81,14 +81,14 @@ export const useAppData = () => {
     setLoading(prev => ({ ...prev, events: true }));
     setErrors(prev => ({ ...prev, events: null }));
 
-          try {
-        const response = await ApiService.getEvents();
-        // console.log('Réponse API Events complète:', JSON.stringify(response.data, null, 2));
-        if (response.error) {
-          setErrors(prev => ({ ...prev, events: response.error || null }));
-        } else {
-        // API Platform retourne les données dans member pour les listes
-        const eventsData = (response.data as any)['member'] || response.data;
+    try {
+      const response = await ApiService.getEvents();
+      
+      if (response.error) {
+        setErrors(prev => ({ ...prev, events: response.error || null }));
+      } else {
+        // Les données sont déjà traitées dans le service API
+        const eventsData = response.data;
         
         // Vérifier que eventsData est un tableau
         if (!Array.isArray(eventsData)) {

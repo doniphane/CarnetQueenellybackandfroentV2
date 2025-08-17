@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation"
 import { NoteCard } from "@/components/note-card"
 import { NoteFilters } from "@/components/note-filters"
 import { NoteForm } from "@/components/note-form"
+import { NoteViewModal } from "@/components/note-view-modal"
 import { CalendarMonthView } from "@/components/calendar-month-view"
 import { CalendarWeekView } from "@/components/calendar-week-view"
 import { CalendarListView } from "@/components/calendar-list-view"
@@ -14,10 +15,15 @@ import { EventForm } from "@/components/event-form"
 import { DashboardStats } from "@/components/dashboard-stats"
 import { DashboardRecentActivity } from "@/components/dashboard-recent-activity"
 import { DashboardQuickActions } from "@/components/dashboard-quick-actions"
+import { CreatePublicCalendar } from "@/components/create-public-calendar"
+import { PublicCalendarsList } from "@/components/public-calendars-list"
+import { PublicCalendarView } from "@/components/public-calendar-view"
+
 import { Button } from "@/components/ui/button"
 import { Plus, Calendar, List, Grid, AlertCircle } from "lucide-react"
 import type { Note } from "@/types/note"
 import type { Event, CalendarView } from "@/types/event"
+import type { PublicCalendar } from "@/types/public-calendar"
 import { filterNotes } from "@/lib/note-utils"
 import { filterEvents } from "@/lib/calendar-utils"
 import { useAppData } from "@/hooks/useAppData"
@@ -36,6 +42,9 @@ export default function HomePage() {
   const [currentDate, setCurrentDate] = useState(new Date())
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined)
   const [showFilters, setShowFilters] = useState(false)
+  const [selectedPublicCalendar, setSelectedPublicCalendar] = useState<PublicCalendar | null>(null)
+  const [selectedNote, setSelectedNote] = useState<Note | null>(null)
+  const [isNoteModalOpen, setIsNoteModalOpen] = useState(false)
   
   const { isAuthenticated, isLoading: authLoading } = useAuth()
   const router = useRouter()
@@ -90,6 +99,16 @@ export default function HomePage() {
   const handleAddEvent = () => {
     setActiveSection("calendar")
     setShowEventForm(true)
+  }
+
+  const handleViewNote = (note: Note) => {
+    setSelectedNote(note)
+    setIsNoteModalOpen(true)
+  }
+
+  const handleCloseNoteModal = () => {
+    setIsNoteModalOpen(false)
+    setSelectedNote(null)
   }
 
   const handleSearch = () => {
@@ -212,6 +231,14 @@ export default function HomePage() {
     setActiveSection("calendar")
   }
 
+  const handleOpenPublicCalendar = (calendar: PublicCalendar) => {
+    setSelectedPublicCalendar(calendar)
+  }
+
+  const handleBackToPublicCalendars = () => {
+    setSelectedPublicCalendar(null)
+  }
+
   // Afficher les erreurs si elles existent
   const hasErrors = errors.notes || errors.events || errors.dashboard
 
@@ -289,6 +316,12 @@ export default function HomePage() {
                     onViewAllEvents={handleViewCalendar}
                   />
                 </div>
+
+                <div className="animate-in fade-in-0 slide-in-from-bottom-8 duration-1000">
+                  <div className="flex justify-center">
+                    <CreatePublicCalendar />
+                  </div>
+                </div>
               </div>
             )}
 
@@ -330,7 +363,12 @@ export default function HomePage() {
                             className="animate-in fade-in-0 slide-in-from-bottom-4 duration-500"
                             style={{ animationDelay: `${index * 100}ms` }}
                           >
-                            <NoteCard note={note} onEdit={handleEditNote} onDelete={handleDeleteNote} />
+                            <NoteCard 
+                              note={note} 
+                              onEdit={handleEditNote} 
+                              onDelete={handleDeleteNote} 
+                              onView={handleViewNote}
+                            />
                           </div>
                         ))}
                       </div>
@@ -440,12 +478,43 @@ export default function HomePage() {
                 )}
               </div>
             )}
+
+            {activeSection === "public-calendars" && (
+              <div className="space-y-6 animate-in fade-in-0 slide-in-from-right-4 duration-500">
+                {selectedPublicCalendar ? (
+                  <PublicCalendarView 
+                    calendar={selectedPublicCalendar} 
+                    onBack={handleBackToPublicCalendars}
+                  />
+                ) : (
+                  <>
+                    <div className="animate-in fade-in-0 slide-in-from-top-2 duration-300">
+                      <h1 className="text-2xl md:text-3xl font-bold text-foreground">Calendriers Publics</h1>
+                      <p className="text-muted-foreground mt-2">Découvrez et gérez les calendriers partagés par la communauté</p>
+                    </div>
+
+                    <div className="animate-in fade-in-0 slide-in-from-bottom-4 duration-500">
+                      <PublicCalendarsList onOpenCalendar={handleOpenPublicCalendar} />
+                    </div>
+                  </>
+                )}
+              </div>
+            )}
           </div>
         </main>
       </div>
       
       {/* Footer - maintenant en bas de page */}
       <Footer />
+      
+      {/* Modal pour afficher le contenu complet d'une note */}
+      <NoteViewModal
+        note={selectedNote}
+        isOpen={isNoteModalOpen}
+        onClose={handleCloseNoteModal}
+        onEdit={handleEditNote}
+        onDelete={handleDeleteNote}
+      />
     </div>
   )
 }

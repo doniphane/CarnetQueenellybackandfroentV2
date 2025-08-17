@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Configuration pour éviter les erreurs de build
   eslint: {
     ignoreDuringBuilds: true,
   },

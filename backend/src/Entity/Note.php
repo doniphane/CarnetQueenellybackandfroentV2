@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use ApiPlatform\Metadata\ApiResource;
 use App\Repository\NoteRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -10,18 +9,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 use App\Entity\User;
 
 #[ORM\Entity(repositoryClass: NoteRepository::class)]
-#[ApiResource(
-    operations: [
-        new \ApiPlatform\Metadata\GetCollection(),
-        new \ApiPlatform\Metadata\Get(),
-        new \ApiPlatform\Metadata\Post(),
-        new \ApiPlatform\Metadata\Put(),
-        new \ApiPlatform\Metadata\Patch(),
-        new \ApiPlatform\Metadata\Delete(),
-    ],
-    normalizationContext: ['groups' => ['note:read']],
-    denormalizationContext: ['groups' => ['note:write']]
-)]
 class Note
 {
     #[ORM\Id]
@@ -67,7 +54,7 @@ class Note
     private ?\DateTimeImmutable $updatedAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'notes')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     #[Groups(['note:read', 'note:write'])]
     private ?User $user = null;
 

@@ -1,5 +1,6 @@
 import type { LoginRequest, RegisterRequest, AuthResponse, User } from '@/types/auth';
 
+// URL originale qui fonctionnait
 const API_BASE_URL = 'https://localhost:8000/api';
 
 export class AuthService {
@@ -12,14 +13,29 @@ export class AuthService {
       const response = await fetch(url, {
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json',
           ...options.headers,
         },
+        credentials: 'include', // Inclut les cookies si nécessaire
         ...options,
       });
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.error || `Erreur HTTP: ${response.status}`);
+        let errorMessage = `Erreur HTTP: ${response.status} - ${response.statusText}`;
+        
+        try {
+          const errorData = await response.json();
+          if (errorData.error) {
+            errorMessage = errorData.error;
+          } else if (errorData.message) {
+            errorMessage = errorData.message;
+          }
+        } catch (parseError) {
+          // Si on ne peut pas parser le JSON, on utilise le message par défaut
+          console.warn('Impossible de parser la réponse d\'erreur:', parseError);
+        }
+        
+        throw new Error(errorMessage);
       }
 
       return await response.json();
@@ -52,9 +68,12 @@ export class AuthService {
     return response.user;
   }
 
-  static async logout(): Promise<{ message: string }> {
+  static async logout(token: string): Promise<{ message: string }> {
     return this.request<{ message: string }>('/users/logout', {
       method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
     });
   }
 } 

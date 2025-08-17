@@ -5,3 +5,13 @@ api_platform:
         stateless: true
         cache_headers:
             vary: ['Content-Type', 'Authorization', 'Origin']
+        extra_properties:
+            standard_put: true
+        pagination_client_enabled: true
+        pagination_client_items_per_page: true
+        formats:
+            jsonld: ['application/ld+json']
+            json: ['application/json']
+            html: ['text/html']
+        json_ld_context:
+            '@vocab': 'http://localhost:8000/api/docs.jsonld#'

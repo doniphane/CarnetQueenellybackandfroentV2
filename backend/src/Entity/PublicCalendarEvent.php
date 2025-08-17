@@ -2,73 +2,96 @@
 
 namespace App\Entity;
 
-use App\Repository\EventRepository;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Post;
+use ApiPlatform\Metadata\Put;
+use ApiPlatform\Metadata\Delete;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
-use App\Entity\User;
 
-#[ORM\Entity(repositoryClass: EventRepository::class)]
-class Event
+#[ORM\Entity]
+#[ORM\Table(name: 'public_calendar_events')]
+#[ApiResource(
+    operations: [
+        new GetCollection(
+            normalizationContext: ['groups' => ['public_calendar_event:read']]
+        ),
+        new Post(
+            normalizationContext: ['groups' => ['public_calendar_event:read']],
+            denormalizationContext: ['groups' => ['public_calendar_event:write']]
+        ),
+        new Get(
+            normalizationContext: ['groups' => ['public_calendar_event:read']]
+        ),
+        new Put(
+            normalizationContext: ['groups' => ['public_calendar_event:read']],
+            denormalizationContext: ['groups' => ['public_calendar_event:write']]
+        ),
+        new Delete(),
+    ]
+)]
+class PublicCalendarEvent
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['event:read'])]
+    #[Groups(['public_calendar_event:read'])]
     private ?int $id = null;
 
+    #[ORM\Column]
+    #[Groups(['public_calendar_event:read', 'public_calendar_event:write'])]
+    private ?int $calendarId = null;
+
     #[ORM\Column(length: 255)]
-    #[Groups(['event:read', 'event:write'])]
-    #[Assert\NotBlank(message: 'Le titre est obligatoire')]
-    #[Assert\Length(max: 255, maxMessage: 'Le titre ne peut pas dépasser {{ limit }} caractères')]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 1, max: 255)]
+    #[Groups(['public_calendar_event:read', 'public_calendar_event:write'])]
     private ?string $title = null;
 
     #[ORM\Column(type: 'text')]
-    #[Groups(['event:read', 'event:write'])]
-    #[Assert\NotBlank(message: 'La description est obligatoire')]
+    #[Assert\NotBlank]
+    #[Groups(['public_calendar_event:read', 'public_calendar_event:write'])]
     private ?string $description = null;
 
     #[ORM\Column(type: 'date')]
-    #[Groups(['event:read', 'event:write'])]
-    #[Assert\NotNull(message: 'La date est obligatoire')]
+    #[Assert\NotNull]
+    #[Groups(['public_calendar_event:read', 'public_calendar_event:write'])]
     private ?\DateTimeInterface $date = null;
 
     #[ORM\Column(length: 5)]
-    #[Groups(['event:read', 'event:write'])]
-    #[Assert\NotBlank(message: 'L\'heure de début est obligatoire')]
-    #[Assert\Regex(pattern: '/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/', message: 'L\'heure de début doit être au format HH:MM')]
+    #[Assert\NotBlank]
+    #[Assert\Regex('/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/')]
+    #[Groups(['public_calendar_event:read', 'public_calendar_event:write'])]
     private ?string $startTime = null;
 
     #[ORM\Column(length: 5)]
-    #[Groups(['event:read', 'event:write'])]
-    #[Assert\NotBlank(message: 'L\'heure de fin est obligatoire')]
-    #[Assert\Regex(pattern: '/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/', message: 'L\'heure de fin doit être au format HH:MM')]
+    #[Assert\NotBlank]
+    #[Assert\Regex('/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/')]
+    #[Groups(['public_calendar_event:read', 'public_calendar_event:write'])]
     private ?string $endTime = null;
 
     #[ORM\Column(length: 20)]
-    #[Groups(['event:read', 'event:write'])]
-    #[Assert\NotBlank(message: 'La catégorie est obligatoire')]
-    #[Assert\Choice(choices: ['personnel', 'travail', 'autre'], message: 'La catégorie doit être personnel, travail ou autre')]
+    #[Assert\NotBlank]
+    #[Assert\Choice(['personnel', 'travail', 'autre'])]
+    #[Groups(['public_calendar_event:read', 'public_calendar_event:write'])]
     private ?string $category = null;
 
     #[ORM\Column(length: 20)]
-    #[Groups(['event:read', 'event:write'])]
-    #[Assert\NotBlank(message: 'Le tag est obligatoire')]
-    #[Assert\Choice(choices: ['en-cours', 'termine', 'a-faire'], message: 'Le tag doit être en-cours, termine ou a-faire')]
+    #[Assert\NotBlank]
+    #[Assert\Choice(['en-cours', 'termine', 'a-faire'])]
+    #[Groups(['public_calendar_event:read', 'public_calendar_event:write'])]
     private ?string $tag = null;
 
     #[ORM\Column]
-    #[Groups(['event:read'])]
+    #[Groups(['public_calendar_event:read'])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column]
-    #[Groups(['event:read'])]
+    #[Groups(['public_calendar_event:read'])]
     private ?\DateTimeImmutable $updatedAt = null;
-
-    #[ORM\ManyToOne(inversedBy: 'events')]
-    #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['event:read', 'event:write'])]
-    private ?User $user = null;
 
     public function __construct()
     {
@@ -79,6 +102,17 @@ class Event
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getCalendarId(): ?int
+    {
+        return $this->calendarId;
+    }
+
+    public function setCalendarId(int $calendarId): static
+    {
+        $this->calendarId = $calendarId;
+        return $this;
     }
 
     public function getTitle(): ?string
@@ -184,16 +218,5 @@ class Event
     public function setUpdatedAtValue(): void
     {
         $this->updatedAt = new \DateTimeImmutable();
-    }
-
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): static
-    {
-        $this->user = $user;
-        return $this;
     }
 }
